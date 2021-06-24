@@ -47,13 +47,11 @@ namespace SideJointAPI
         private async Task<List<PriceSummaryDTO>> GetPriceSummary()
         {
             
-            var masterdata = await _mainContext.MasterItems.AsNoTracking().ToListAsync();
-            List<PriceSummaryDTO> _listPriceSummaryDTO = new List<PriceSummaryDTO>();
-            foreach (var masteritem in masterdata)
-            {
-               
-                var todayopeningmarket = masteritem.todayopenvalue;
-                
+            var _masterdata = await _mainContext.MasterItems.AsNoTracking().ToListAsync();
+            var _listPriceSummaryDTO = new List<PriceSummaryDTO>();
+            foreach (var masteritem in _masterdata)
+            {               
+                var todayopeningmarket = masteritem.todayopenvalue;                
                 var data = await _mainContext.PriceTracker.Where(x => x.itemid == masteritem.id).AsNoTracking().ToListAsync();
                 var result = data.GroupBy(x => x.itemid)
                                .Select(group => new PriceSummaryItem
@@ -63,23 +61,19 @@ namespace SideJointAPI
                                    averageprice = Math.Round(group.Average(i => i.price),2)
                                }).ToList();
 
-
                 foreach (var item in result)
                 {
                     var percentage = Math.Round(((Double)item.averageprice - (Double)todayopeningmarket) / ((Double)todayopeningmarket) * 100,;
-
-                    if (percentage > 0)
-                    {
+                    var percentageInString = "";
+                    if (percentage > 0){
                         item.pricestatus = "UP";
-                        item.percentage = "+" + percentage + "%";
+                        percentageInString = "+" + percentage + "%";                      
                     }
-                    else
-                    {
+                    else {
                         item.pricestatus = "DOWN";
-                        item.percentage = percentage + "%";
+                        percentageInString = percentage + "%";
                     }
-
-
+                    item.percentage = percentageInString;
                 }
 
                 _listPriceSummaryDTO.Add(new PriceSummaryDTO()
@@ -95,11 +89,9 @@ namespace SideJointAPI
             return _listPriceSummaryDTO;
         }
 
-
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _timer?.Change(Timeout.Infinite, 0);
-
             return Task.CompletedTask;
         }
     }

@@ -23,9 +23,7 @@ namespace SideJointAPI.Controllers
         {
             _context = context;
             _logger = logger;
-        }
-
-    
+        }    
 
         // GET: api/MasterItems
         [HttpGet]

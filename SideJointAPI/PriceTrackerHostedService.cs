@@ -66,7 +66,7 @@ namespace SideJointAPI
 
                 foreach (var item in result)
                 {
-                    var percentage = Math.Round(((Double)item.averageprice - (Double)todayopeningmarket) / ((Double)todayopeningmarket) * 100,2);
+                    var percentage = Math.Round(((Double)item.averageprice - (Double)todayopeningmarket) / ((Double)todayopeningmarket) * 100,;
 
                     if (percentage > 0)
                     {

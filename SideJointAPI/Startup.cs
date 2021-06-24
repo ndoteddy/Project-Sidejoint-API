@@ -65,9 +65,6 @@ namespace SideJointAPI
 
             app.UseRouting();
 
-           // app.UseWebSockets();
-
-
             app.UseCors(MyAllowSpecificOrigins);
 
             app.UseSignalR(routes =>
